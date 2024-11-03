@@ -1,0 +1,31 @@
+{
+  "environmental_readings": [
+    {
+      "timestamp": "2024-03-20T00:00:00",
+      "temperature": 23,
+      "humidity": 65,
+      "light_intensity": 0,
+      "ventilation_status": "active",
+      "irrigation_status": "inactive"
+    }
+  ],
+  "system_settings": {
+    "temperature_threshold": {
+      "min": 20,
+      "max": 28,
+      "optimal": 24
+    },
+    "humidity_threshold": {
+      "min": 55,
+      "max": 75,
+      "optimal": 65
+    },
+    "light_threshold": {
+      "min": 0,
+      "max": 1000,
+      "optimal": 850
+    },
+    "ai_mode": true,
+    "automatic_controls": true
+  }
+}

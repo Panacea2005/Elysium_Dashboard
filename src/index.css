@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom slider styles */
+input[type="range"] {
+  @apply appearance-none bg-gray-200 h-2 rounded-lg;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 bg-blue-500 rounded-full cursor-pointer hover:bg-blue-600 transition-colors;
+}
+
+/* Dark mode slider styles */
+.dark input[type="range"] {
+  @apply bg-gray-700;
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  @apply bg-blue-400 hover:bg-blue-500;
+}
