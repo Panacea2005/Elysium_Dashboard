@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ControlSlider = ({ label, value, min, max, onChange, unit, darkMode }) => {
+const ControlSlider = ({ label, value, min, max, step, onChange, unit, darkMode }) => {
   return (
     <div>
       <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
@@ -12,6 +12,7 @@ const ControlSlider = ({ label, value, min, max, onChange, unit, darkMode }) => 
           min={min}
           max={max}
           value={value}
+          step={step}
           onChange={(e) => onChange(Number(e.target.value))}
           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
         />

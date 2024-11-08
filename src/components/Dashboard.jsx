@@ -43,16 +43,15 @@ const data = {
   ],
 };
 
-const Dashboard = () => {
-  const [darkMode, setDarkMode] = useState(false);
+const Dashboard = ({ darkMode }) => {
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [settings, setSettings] = useState({
     temperature: 24,
     humidity: 65,
     lightIntensity: 85
   });
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchVisible, setSearchVisible] = useState(false);
 
   const handleSettingChange = (setting, value) => {
     setSettings(prev => ({
