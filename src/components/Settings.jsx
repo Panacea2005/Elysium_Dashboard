@@ -35,7 +35,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-2">Language</label>
-              <select 
+              <select
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
@@ -49,7 +49,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Theme</label>
-              <select 
+              <select
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 value={darkMode ? 'dark' : 'light'}
                 onChange={(e) => setDarkMode(e.target.value === 'dark')}
@@ -60,7 +60,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Time Zone</label>
-              <select 
+              <select
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 value={timeZone}
                 onChange={(e) => setTimeZone(e.target.value)}
@@ -75,10 +75,10 @@ const Settings = ({ darkMode, setDarkMode }) => {
             <div>
               <label className="block text-sm font-medium mb-2">Notifications</label>
               <div className="flex items-center">
-                <input 
-                  type="checkbox" 
-                  checked={notifications} 
-                  onChange={(e) => setNotifications(e.target.checked)} 
+                <input
+                  type="checkbox"
+                  checked={notifications}
+                  onChange={(e) => setNotifications(e.target.checked)}
                   className={`mr-2 ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 />
                 <span>{notifications ? 'Enabled' : 'Disabled'}</span>
@@ -86,7 +86,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Privacy</label>
-              <select 
+              <select
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 value={privacy}
                 onChange={(e) => setPrivacy(e.target.value)}
@@ -98,7 +98,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Account Settings</label>
-              <button 
+              <button
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
                 onClick={() => handleTabChange('account')}
               >

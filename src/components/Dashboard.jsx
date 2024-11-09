@@ -370,7 +370,7 @@ const Dashboard = () => {
         )}
         {activeTab === 'alerts' && <Alerts darkMode={darkMode} />}
         {activeTab === 'maintenance' && <MaintenanceRecord darkMode={darkMode} />}
-        {activeTab === 'settings' && <Settings darkMode={darkMode} />}
+        {activeTab === 'settings' && <Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
         {activeTab === 'account' && <Account darkMode={darkMode} />}
         {activeTab === 'performance' && <PerformanceReport darkMode={darkMode} />}
       </div>
