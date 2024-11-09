@@ -22,6 +22,7 @@ const Dashboard = () => {
     humidity: 65,
     lightIntensity: 85
   });
+  const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '');
 
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -137,7 +138,11 @@ const Dashboard = () => {
             <div className="px-4 space-y-2">
               <div className="flex flex-col items-center space-y-2 mb-6">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                  <FaUser className="w-8 h-8 text-gray-400" />
+                  {avatar ? (
+                    <img src={avatar} alt="Avatar" className="w-16 h-16 rounded-full object-cover" />
+                  ) : (
+                    <FaUser className="w-8 h-8 text-gray-400" />
+                  )}
                 </div>
               </div>
               {navItems.map(({ id, icon: Icon, label }) => (
@@ -349,7 +354,7 @@ const Dashboard = () => {
                   {/* Radar Chart Section */}
                   <div className={`p-6 rounded-lg shadow-lg flex-1 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                     <h2 className="text-xl font-semibold mb-2">Detailed Statistics</h2>
-                      <Radar data={data} options={options} />
+                    <Radar data={data} options={options} />
                   </div>
                 </div>
 
@@ -371,7 +376,7 @@ const Dashboard = () => {
         {activeTab === 'alerts' && <Alerts darkMode={darkMode} />}
         {activeTab === 'maintenance' && <MaintenanceRecord darkMode={darkMode} />}
         {activeTab === 'settings' && <Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
-        {activeTab === 'account' && <Account darkMode={darkMode} />}
+        {activeTab === 'account' && <Account darkMode={darkMode} setAvatar={setAvatar} />}
         {activeTab === 'performance' && <PerformanceReport darkMode={darkMode} />}
       </div>
     </div>

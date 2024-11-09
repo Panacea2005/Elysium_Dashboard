@@ -8,12 +8,14 @@ const Account = ({ darkMode }) => {
   const [isEditingAccount, setIsEditingAccount] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
+  const [avatar, setAvatar] = useState(localStorage.getItem('avatar') || '');
 
   useEffect(() => {
     localStorage.setItem('username', username);
     localStorage.setItem('email', email);
     localStorage.setItem('password', password);
-  }, [username, email, password]);
+    localStorage.setItem('avatar', avatar);
+  }, [username, email, password, avatar]);
 
   const handleSaveAccount = () => {
     setIsEditingAccount(false);
@@ -22,6 +24,19 @@ const Account = ({ darkMode }) => {
   const handleSavePassword = () => {
     setPassword(newPassword);
     setIsEditingPassword(false);
+  };
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const avatarUrl = reader.result;
+        setAvatar(avatarUrl);
+        localStorage.setItem('avatar', avatarUrl);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -36,15 +51,29 @@ const Account = ({ darkMode }) => {
             <div className={`w-24 h-24 rounded-full flex items-center justify-center ${
               darkMode ? 'bg-gray-700' : 'bg-gray-100'
             }`}>
-              <FaUser className="w-12 h-12 text-gray-400" />
+              {avatar ? (
+                <img src={avatar} alt="Avatar" className="w-24 h-24 rounded-full object-cover" />
+              ) : (
+                <FaUser className="w-12 h-12 text-gray-400" />
+              )}
             </div>
-            <button className={`px-4 py-2 rounded-lg ${
-              darkMode 
-                ? 'bg-gray-700 hover:bg-gray-600' 
-                : 'bg-gray-100 hover:bg-gray-200'
-            }`}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+              id="avatarInput"
+            />
+            <label
+              htmlFor="avatarInput"
+              className={`px-4 py-2 rounded-lg cursor-pointer ${
+                darkMode 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white' 
+                  : 'bg-gray-100 hover:bg-gray-200 text-black'
+              }`}
+            >
               Change Photo
-            </button>
+            </label>
           </div>
           <div>
             <label className="block text-sm font-medium mb-2">Username</label>
