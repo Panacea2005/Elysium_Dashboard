@@ -1,49 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Radar } from 'react-chartjs-2';
-import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { FaThermometerHalf, FaWater, FaSun, FaLeaf, FaWind, FaMoon, FaHome, FaCog, FaUser, FaBars, FaSignOutAlt, FaExclamationTriangle, FaTools, FaFileAlt, FaSearch } from 'react-icons/fa';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer } from 'recharts';
+import { Radar } from 'react-chartjs-2';
 import StatusCard from './StatusCard';
 import SystemStatus from './SystemStatus';
 import ControlPanel from './ControlPanel';
 import Alerts from './Alerts';
 import MaintenanceRecord from './MaintenanceRecords';
-import Account from './Account'; 
+import Account from './Account';
 import Settings from './Settings';
 import PerformanceReport from './PerformanceReports';
 import logo from '/Logo.png';
 
-ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
-
-const realData = [24, 65, 850, 412, 2.3]; // Current greenhouse readings
-const maxData = [30, 80, 1000, 1200, 4]; // Maximum values for each metric
-const idealData = [26, 70, 900, 800, 3]; // Ideal values for greenhouse conditions
-
-// Normalize each dataset to fit within 0-100%
-const normalizedCurrentData = realData.map((value, index) => (value / maxData[index]) * 100);
-const normalizedIdealData = idealData.map((value, index) => (value / maxData[index]) * 100);
-
-const data = {
-  labels: ['Temperature (°C)', 'Humidity (%)', 'Light (lux)', 'CO2 (ppm)', 'Airflow (m/s)'],
-  datasets: [
-    {
-      label: 'Current',
-      data: normalizedCurrentData,
-      backgroundColor: 'rgba(34, 202, 236, 0.2)',
-      borderColor: 'rgba(34, 202, 236, 1)',
-      borderWidth: 1,
-    },
-    {
-      label: 'Ideal',
-      data: normalizedIdealData,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)', // Green background for "Ideal" dataset
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1,
-    },
-  ],
-};
-
-const Dashboard = ({ darkMode }) => {
+const Dashboard = () => {
+  const [darkMode, setDarkMode] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -52,6 +22,19 @@ const Dashboard = ({ darkMode }) => {
     humidity: 65,
     lightIntensity: 85
   });
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setDarkMode(prevMode => {
+      const newMode = !prevMode;
+      localStorage.setItem('darkMode', newMode);
+      return newMode;
+    });
+  };
 
   const handleSettingChange = (setting, value) => {
     setSettings(prev => ({
@@ -77,14 +60,25 @@ const Dashboard = ({ darkMode }) => {
     { time: '20:00', temperature: 21, humidity: 63, light: 70 },
   ];
 
-  const navItems = [
-    { id: 'dashboard', icon: FaHome, label: 'Dashboard' },
-    { id: 'alerts', icon: FaExclamationTriangle, label: 'Alerts' },
-    { id: 'maintenance', icon: FaTools, label: 'Maintenance Records' }, 
-    { id: 'performance', icon: FaFileAlt, label: 'Performance Reports' },
-    { id: 'settings', icon: FaCog, label: 'Settings' },
-    { id: 'account', icon: FaUser, label: 'Account' },
-  ];
+  const data = {
+    labels: ['Temperature (°C)', 'Humidity (%)', 'Light (lux)', 'CO2 (ppm)', 'Airflow (m/s)'],
+    datasets: [
+      {
+        label: 'Current',
+        data: [24, 65, 850, 412, 2.3].map((value, index) => (value / [30, 80, 1000, 1200, 4][index]) * 100),
+        backgroundColor: 'rgba(34, 202, 236, 0.2)',
+        borderColor: 'rgba(34, 202, 236, 1)',
+        borderWidth: 1,
+      },
+      {
+        label: 'Ideal',
+        data: [26, 70, 900, 800, 3].map((value, index) => (value / [30, 80, 1000, 1200, 4][index]) * 100),
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
 
   const options = {
     scales: {
@@ -93,34 +87,42 @@ const Dashboard = ({ darkMode }) => {
           display: false,
         },
         grid: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)', // Light grid lines for dark mode, dark for light mode
+          color: darkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
         },
         pointLabels: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)', // Light font color for dark mode, dark for light mode
+          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
         },
         ticks: {
-          backdropColor: darkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)', // Dark backdrop for ticks in dark mode, light for light mode
-          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)', // Light tick color for dark mode, dark for light mode
-          callback: function(value) {
-            return value + '%'; // Display each tick as a percentage
+          backdropColor: darkMode ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)',
+          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          callback: function (value) {
+            return value + '%';
           },
-          min: 0,   // Set minimum to 0%
-          max: 100, // Set maximum to 100%
+          min: 0,
+          max: 100,
         },
       },
     },
     plugins: {
       legend: {
         labels: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)', // Light legend text color for dark mode, dark for light mode
+          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
         },
       },
     },
   };
 
+  const navItems = [
+    { id: 'dashboard', icon: FaHome, label: 'Dashboard' },
+    { id: 'alerts', icon: FaExclamationTriangle, label: 'Alerts' },
+    { id: 'maintenance', icon: FaTools, label: 'Maintenance Records' },
+    { id: 'performance', icon: FaFileAlt, label: 'Performance Reports' },
+    { id: 'settings', icon: FaCog, label: 'Settings' },
+    { id: 'account', icon: FaUser, label: 'Account' },
+  ];
+
   return (
     <div className={`min-h-screen transition-colors duration-200 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-800'}`}>
-      
       {/* Navigation Sidebar */}
       <div className={`fixed left-0 top-0 h-full shadow-xl transition-all duration-300 z-40 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
         <div className="w-64 h-full flex flex-col">
@@ -134,11 +136,7 @@ const Dashboard = ({ darkMode }) => {
           <nav className="flex-1">
             <div className="px-4 space-y-2">
               <div className="flex flex-col items-center space-y-2 mb-6">
-                <div
-                  className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                    darkMode ? 'bg-gray-700' : 'bg-gray-100'
-                  }`}
-                  >
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                   <FaUser className="w-8 h-8 text-gray-400" />
                 </div>
               </div>
@@ -147,7 +145,7 @@ const Dashboard = ({ darkMode }) => {
                   key={id}
                   onClick={() => setActiveTab(id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all
-                    ${activeTab === id 
+                    ${activeTab === id
                       ? (darkMode ? 'bg-gray-800 text-emerald-400' : 'bg-emerald-50 text-emerald-700 font-semibold')
                       : (darkMode ? 'text-gray-400 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900')}
                   `}
@@ -161,11 +159,11 @@ const Dashboard = ({ darkMode }) => {
 
           {/* Log Out Button */}
           <div className="p-4">
-            <button 
+            <button
               onClick={() => console.log('Logging out...')} // Replace with actual logout logic
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
-                ${darkMode 
-                  ? 'text-red-400 hover:bg-gray-800 hover:text-red-300' 
+                ${darkMode
+                  ? 'text-red-400 hover:bg-gray-800 hover:text-red-300'
                   : 'text-red-600 hover:bg-red-50 hover:text-red-700'}
               `}
             >
@@ -215,152 +213,148 @@ const Dashboard = ({ darkMode }) => {
                   <span className={`px-4 py-2 rounded-full text-sm font-medium ${darkMode ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-800'}`}>
                     System Status: Optimal
                   </span>
-                  <button 
-                    onClick={() => setDarkMode(!darkMode)} 
-                    className={`p-2 rounded-lg transition-colors ${
-                      darkMode 
-                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                        : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
-                    }`}
+                  <button
+                    onClick={toggleDarkMode}
+                    className={`p-2 rounded-lg transition-colors ${darkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'}`}
                   >
                     {darkMode ? <FaMoon className="w-5 h-5" /> : <FaSun className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
-              
+
               {/* Status Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-                <StatusCard 
-                  icon={<FaThermometerHalf />} 
-                  title="Temperature" 
-                  value="24°C" 
-                  status="Optimal" 
-                  trend="+1.2°C" 
-                  trendDirection="up" 
-                  darkMode={darkMode} 
+                <StatusCard
+                  icon={<FaThermometerHalf />}
+                  title="Temperature"
+                  value="24°C"
+                  status="Optimal"
+                  trend="+1.2°C"
+                  trendDirection="up"
+                  darkMode={darkMode}
                 />
-                <StatusCard 
-                  icon={<FaWater />} 
-                  title="Humidity" 
-                  value="65%" 
-                  status="Normal" 
-                  trend="-2%" 
-                  trendDirection="down" 
-                  darkMode={darkMode} 
+                <StatusCard
+                  icon={<FaWater />}
+                  title="Humidity"
+                  value="65%"
+                  status="Normal"
+                  trend="-2%"
+                  trendDirection="down"
+                  darkMode={darkMode}
                 />
-                <StatusCard 
-                  icon={<FaSun />} 
-                  title="Light Intensity" 
-                  value="850 lux" 
-                  status="High" 
-                  trend="+50 lux" 
-                  trendDirection="up" 
-                  darkMode={darkMode} 
+                <StatusCard
+                  icon={<FaSun />}
+                  title="Light Intensity"
+                  value="850 lux"
+                  status="High"
+                  trend="+50 lux"
+                  trendDirection="up"
+                  darkMode={darkMode}
                 />
-                <StatusCard 
-                  icon={<FaLeaf />} 
-                  title="CO2 Levels" 
-                  value="412 ppm" 
-                  status="Normal" 
-                  trend="+5 ppm" 
-                  trendDirection="up" 
-                  darkMode={darkMode} 
+                <StatusCard
+                  icon={<FaLeaf />}
+                  title="CO2 Levels"
+                  value="412 ppm"
+                  status="Normal"
+                  trend="+5 ppm"
+                  trendDirection="up"
+                  darkMode={darkMode}
                 />
-                <StatusCard 
-                  icon={<FaWind />} 
-                  title="Air Flow" 
-                  value="2.3 m/s" 
-                  status="Optimal" 
-                  trend="-0.1 m/s" 
-                  trendDirection="down" 
-                  darkMode={darkMode} 
+                <StatusCard
+                  icon={<FaWind />}
+                  title="Air Flow"
+                  value="2.3 m/s"
+                  status="Optimal"
+                  trend="-0.1 m/s"
+                  trendDirection="down"
+                  darkMode={darkMode}
                 />
               </div>
 
               {/* Charts and System Performance Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div className="flex flex-col lg:flex-row gap-8 mb-8">
                 {/* Left Column: Charts and Statistics */}
-                <div>
+                <div className="flex-1 flex flex-col">
                   {/* Chart Section */}
-                  <div className={`p-6 rounded-lg shadow-lg mb-6 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                  <div className={`p-6 rounded-lg shadow-lg mb-6 flex-1 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                     <h2 className="text-xl font-semibold mb-4">Environmental Trends</h2>
                     <ResponsiveContainer width="100%" height={300}>
                       <LineChart data={environmentalData}>
                         {/* Cartesian Grid with darker stroke for dark mode */}
                         <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? '#374151' : '#e5e7eb'} />
-                        
+
                         {/* X and Y Axes with conditional stroke */}
                         <XAxis dataKey="time" stroke={darkMode ? '#9CA3AF' : '#4B5563'} />
                         <YAxis stroke={darkMode ? '#9CA3AF' : '#4B5563'} />
-                        
+
                         {/* Tooltip with dynamic dark mode styles */}
-                        <RechartsTooltip 
-                          contentStyle={{ 
+                        <RechartsTooltip
+                          contentStyle={{
                             backgroundColor: darkMode ? '#1F2937' : 'white',
                             border: 'none',
                             borderRadius: '0.5rem',
-                            color: darkMode ? 'white' : 'black',
                           }}
                         />
                         <RechartsLegend />
-                        
+
                         {/* Temperature Line with Gradient */}
                         <defs>
                           <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#00c6ff" />
                             <stop offset="100%" stopColor="#0072ff" />
                           </linearGradient>
-                          
+
                           {/* Humidity Line with Gradient */}
                           <linearGradient id="humGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#00ff99" />
                             <stop offset="100%" stopColor="#007f66" />
                           </linearGradient>
-                          
+
                           {/* Light Intensity Line with Gradient */}
                           <linearGradient id="lightGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="#ffd700" />
                             <stop offset="100%" stopColor="#ff4500" />
                           </linearGradient>
                         </defs>
-                        
+
                         {/* Line for Temperature with Gradient Stroke */}
-                        <Line 
-                          type="monotone" 
-                          dataKey="temperature" 
-                          stroke="url(#tempGradient)" 
-                          strokeWidth={2} 
+                        <Line
+                          type="monotone"
+                          dataKey="temperature"
+                          stroke="url(#tempGradient)"
+                          strokeWidth={2}
                           dot={{ fill: '#00c6ff', stroke: '#0072ff', strokeWidth: 2 }}
                         />
-                        
+
                         {/* Line for Humidity with Gradient Stroke */}
-                        <Line 
-                          type="monotone" 
-                          dataKey="humidity" 
-                          stroke="url(#humGradient)" 
-                          strokeWidth={2} 
+                        <Line
+                          type="monotone"
+                          dataKey="humidity"
+                          stroke="url(#humGradient)"
+                          strokeWidth={2}
                           dot={{ fill: '#00ff99', stroke: '#007f66', strokeWidth: 2 }}
                         />
-                        
+
                         {/* Line for Light Intensity with Gradient Stroke */}
-                        <Line 
-                          type="monotone" 
-                          dataKey="light" 
-                          stroke="url(#lightGradient)" 
-                          strokeWidth={2} 
+                        <Line
+                          type="monotone"
+                          dataKey="light"
+                          stroke="url(#lightGradient)"
+                          strokeWidth={2}
                           dot={{ fill: '#ffd700', stroke: '#ff4500', strokeWidth: 2 }}
                         />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
-                    <h2 className="text-xl font-semibold mb-4">Detailed Statistics</h2>
-                    <Radar data={data} options={options} />
+                  {/* Radar Chart Section */}
+                  <div className={`p-6 rounded-lg shadow-lg flex-1 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                    <h2 className="text-xl font-semibold mb-2">Detailed Statistics</h2>
+                      <Radar data={data} options={options} />
                   </div>
                 </div>
 
                 {/* Right Column: System Performance */}
-                <div className={`p-6 rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                <div className={`p-6 rounded-lg shadow-lg flex-1 flex flex-col ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                   <h2 className="text-xl font-semibold mb-4">System Performance</h2>
                   <SystemStatus darkMode={darkMode} />
                 </div>

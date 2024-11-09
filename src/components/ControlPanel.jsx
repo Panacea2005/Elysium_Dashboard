@@ -39,8 +39,8 @@ const ControlPanel = ({ settings, onSettingChange, darkMode }) => {
       },
       {
         label: 'Humidity (%)',
-        data: Array.from({ length: 60 }, () => Math.random() * (80 - 65) + 65),
-        borderColor: (ctx) => createGradient(ctx.chart.ctx, 'rgba(0, 0, 255, 0.6)', 'rgba(0, 191, 255, 0.6)'),
+        data: Array.from({ length: 60 }, () => Math.random() * (70 - 60) + 60),
+        borderColor: (ctx) => createGradient(ctx.chart.ctx, 'rgba(0, 123, 255, 0.6)', 'rgba(0, 123, 255, 0.6)'),
         borderWidth: 2,
         fill: false,
         tension: 0.2,
@@ -48,7 +48,7 @@ const ControlPanel = ({ settings, onSettingChange, darkMode }) => {
       {
         label: 'Light Intensity (lux)',
         data: Array.from({ length: 60 }, () => Math.random() * (1200 - 850) + 850),
-        borderColor: (ctx) => createGradient(ctx.chart.ctx, 'rgba(255, 255, 0, 0.6)', 'rgba(255, 215, 0, 0.6)'),
+        borderColor: (ctx) => createGradient(ctx.chart.ctx, 'rgba(255, 206, 86, 0.6)', 'rgba(255, 206, 86, 0.6)'),
         borderWidth: 2,
         fill: false,
         tension: 0.2,
@@ -57,43 +57,34 @@ const ControlPanel = ({ settings, onSettingChange, darkMode }) => {
   });
 
   const chartOptions = {
-    animation: {
-      duration: 0,
-    },
     scales: {
       x: {
-        display: true,
-        type: 'linear',
-        min: 0,
-        max: 60,
-        ticks: {
-          stepSize: 2,
-          color: tickColor,
-          callback: function (value) {
-            return value + 's';
-          }
-        },
         grid: {
           color: gridColor,
-        }
+        },
+        ticks: {
+          color: tickColor,
+        },
       },
       y: {
-        display: true,
+        grid: {
+          color: gridColor,
+        },
         ticks: {
           color: tickColor,
         },
-        grid: {
-          color: gridColor,
-        }
       },
     },
     plugins: {
       legend: {
         labels: {
           color: legendColor,
-        }
-      }
-    }
+        },
+      },
+    },
+    animation: {
+      duration: 0, // Disable animation for smoother updates
+    },
   };
 
   useEffect(() => {
@@ -107,7 +98,7 @@ const ControlPanel = ({ settings, onSettingChange, darkMode }) => {
         newTempData.push(Math.random() * (30 - 24) + 24);
 
         newHumidityData.shift();
-        newHumidityData.push(Math.random() * (80 - 65) + 65);
+        newHumidityData.push(Math.random() * (70 - 60) + 60);
 
         newLightData.shift();
         newLightData.push(Math.random() * (1200 - 850) + 850);
@@ -149,91 +140,41 @@ const ControlPanel = ({ settings, onSettingChange, darkMode }) => {
           darkMode={darkMode}
         />
         <ControlSlider
-          label="Light Intensity"
+          label="Light Intensity Control"
           value={settings.lightIntensity}
           min={0}
-          max={100}
+          max={2000}
           onChange={(value) => onSettingChange('lightIntensity', value)}
-          unit="%"
+          unit="lux"
           darkMode={darkMode}
         />
-      </div>
-
-      <div className="space-y-4">
-        <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Additional Controls</h3>
-        <ControlSlider
-          label="CO2 Levels"
-          value={settings.co2levels || 412}
-          min={0}
-          max={1200}
-          onChange={(value) => onSettingChange('co2levels', value)}
-          unit="ppm"
-          darkMode={darkMode}
-        />
-        <ControlSlider
-          label="Fan Speed"
-          value={settings.fanspeed || 2.3}
-          min={0}
-          max={4}
-          step={0.1}
-          onChange={(value) => onSettingChange('fanspeed', value)}
-          unit="m/s"
-          darkMode={darkMode}
-        />
-      </div>
-
-      <div className="space-y-4">
-        <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Quick Actions</h3>
-        <div className="flex space-x-4">
-          <button
-            onClick={() => setVentilationOn(!ventilationOn)}
-            className={`px-6 py-4 flex items-center space-x-2 ${darkMode ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-700'} rounded-lg hover:scale-110 transition-transform`}
-          >
-            <FaFan />
-            <span>{ventilationOn ? 'Turn Off Ventilation' : 'Ventilate Now'}</span>
-          </button>
-          <button
-            onClick={() => setWaterOn(!waterOn)}
-            className={`px-6 py-4 flex items-center space-x-2 ${darkMode ? 'bg-green-900 text-green-200' : 'bg-green-100 text-green-700'} rounded-lg hover:scale-110 transition-transform`}
-          >
-            <FaTint />
-            <span>{waterOn ? 'Turn Off Water' : 'Water Plants'}</span>
-          </button>
-          <button
-            onClick={() => setLightsOn(!lightsOn)}
-            className={`px-6 py-4 flex items-center space-x-2 ${darkMode ? 'bg-yellow-900 text-yellow-200' : 'bg-yellow-100 text-yellow-700'} rounded-lg hover:scale-110 transition-transform`}
-          >
-            <FaLightbulb />
-            <span>{lightsOn ? 'Turn Off Lights' : 'Toggle Lights'}</span>
-          </button>
-        </div>
       </div>
 
       <div className="space-y-4">
         <h3 className={`text-xl font-semibold ${darkMode ? 'text-white' : 'text-gray-800'}`}>Lighting Schedule</h3>
-          <div className="flex items-center space-x-4">
-            <FaSun className={`text-2xl ${darkMode ? 'text-yellow-300' : 'text-yellow-500'}`} />
-            <div className="flex flex-col w-full">
-              <label className={`block ${darkMode ? 'text-white' : 'text-gray-800'}`}>Lights On</label>
-              <input
-                type="time"
-                value={lightSchedule.on}
-                onChange={(e) => setLightSchedule({ ...lightSchedule, on: e.target.value })}
-                className={`p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
-              />
-            </div>
+        <div className="flex items-center space-x-4">
+          <FaSun className={`text-2xl ${darkMode ? 'text-yellow-300' : 'text-yellow-500'}`} />
+          <div className="flex flex-col w-full">
+            <label className={`block ${darkMode ? 'text-white' : 'text-gray-800'}`}>Lights On</label>
+            <input
+              type="time"
+              value={lightSchedule.on}
+              onChange={(e) => setLightSchedule({ ...lightSchedule, on: e.target.value })}
+              className={`p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            />
           </div>
-          <div className="flex items-center space-x-4">
-            <FaMoon className={`text-2xl ${darkMode ? 'text-blue-300' : 'text-blue-500'}`} />
-            <div className="flex flex-col w-full">
-              <label className={`block ${darkMode ? 'text-white' : 'text-gray-800'}`}>Lights Off</label>
-              <input
-                type="time"
-                value={lightSchedule.off}
-                onChange={(e) => setLightSchedule({ ...lightSchedule, off: e.target.value })}
-                className={`p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
-              />
-            </div>
+        </div>
+        <div className="flex items-center space-x-4">
+          <FaMoon className={`text-2xl ${darkMode ? 'text-blue-300' : 'text-blue-500'}`} />
+          <div className="flex flex-col w-full">
+            <label className={`block ${darkMode ? 'text-white' : 'text-gray-800'}`}>Lights Off</label>
+            <input
+              type="time"
+              value={lightSchedule.off}
+              onChange={(e) => setLightSchedule({ ...lightSchedule, off: e.target.value })}
+              className={`p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            />
+          </div>
         </div>
       </div>
 
