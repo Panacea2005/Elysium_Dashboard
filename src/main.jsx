@@ -19,9 +19,14 @@ const App = () => {
     sessionStorage.setItem('isLoggedIn', 'true');
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    sessionStorage.removeItem('isLoggedIn');
+  };
+
   return (
     <React.StrictMode>
-      {isLoggedIn ? <Dashboard /> : <Login onLogin={handleLogin} />}
+      {isLoggedIn ? <Dashboard onLogout={handleLogout} /> : <Login onLogin={handleLogin} />}
     </React.StrictMode>
   );
 };

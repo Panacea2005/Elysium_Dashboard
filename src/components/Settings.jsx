@@ -5,7 +5,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
   const [language, setLanguage] = useState('English');
   const [timeZone, setTimeZone] = useState('UTC (GMT+0)');
   const [notifications, setNotifications] = useState(true);
-  const [privacy, setPrivacy] = useState('Public');
+  const [temperatureUnit, setTemperatureUnit] = useState('Celsius');
   const [activeTab, setActiveTab] = useState('basic');
 
   const handleTabChange = (tab) => {
@@ -65,6 +65,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
                 value={timeZone}
                 onChange={(e) => setTimeZone(e.target.value)}
               >
+                <option>VN (GMT+7)</option>
                 <option>UTC (GMT+0)</option>
                 <option>EST (GMT-5)</option>
                 <option>PST (GMT-8)</option>
@@ -85,15 +86,14 @@ const Settings = ({ darkMode, setDarkMode }) => {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Privacy</label>
+              <label className="block text-sm font-medium mb-2">Temperature Unit</label>
               <select
                 className={`w-full max-w-xs p-2 rounded-md border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
-                value={privacy}
-                onChange={(e) => setPrivacy(e.target.value)}
+                value={temperatureUnit}
+                onChange={(e) => setTemperatureUnit(e.target.value)}
               >
-                <option>Public</option>
-                <option>Private</option>
-                <option>Friends Only</option>
+                <option value="Celsius">Celsius</option>
+                <option value="Fahrenheit">Fahrenheit</option>
               </select>
             </div>
             <div>

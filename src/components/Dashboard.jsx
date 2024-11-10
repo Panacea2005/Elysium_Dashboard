@@ -7,7 +7,6 @@ import SystemStatus from './SystemStatus';
 import ControlPanel from './ControlPanel';
 import Alerts from './Alerts';
 import MaintenanceRecord from './MaintenanceRecords';
-import Account from './Account';
 import Settings from './Settings';
 import PerformanceReport from './PerformanceReports';
 import logo from '/Logo.png';
@@ -50,6 +49,11 @@ const Dashboard = () => {
 
   const toggleSearch = () => {
     setSearchVisible(!searchVisible);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('isLoggedIn');
+    onLogout();
   };
 
   const environmentalData = [
@@ -119,7 +123,6 @@ const Dashboard = () => {
     { id: 'maintenance', icon: FaTools, label: 'Maintenance Records' },
     { id: 'performance', icon: FaFileAlt, label: 'Performance Reports' },
     { id: 'settings', icon: FaCog, label: 'Settings' },
-    { id: 'account', icon: FaUser, label: 'Account' },
   ];
 
   return (
@@ -141,7 +144,7 @@ const Dashboard = () => {
                   {avatar ? (
                     <img src={avatar} alt="Avatar" className="w-16 h-16 rounded-full object-cover" />
                   ) : (
-                    <FaUser className="w-8 h-8 text-gray-400" />
+                    <FaUser className="w-16 h-16 text-gray-400" />
                   )}
                 </div>
               </div>
@@ -165,7 +168,7 @@ const Dashboard = () => {
           {/* Log Out Button */}
           <div className="p-4">
             <button
-              onClick={() => console.log('Logging out...')} // Replace with actual logout logic
+              onClick={handleLogout}
               className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
                 ${darkMode
                   ? 'text-red-400 hover:bg-gray-800 hover:text-red-300'
@@ -376,7 +379,6 @@ const Dashboard = () => {
         {activeTab === 'alerts' && <Alerts darkMode={darkMode} />}
         {activeTab === 'maintenance' && <MaintenanceRecord darkMode={darkMode} />}
         {activeTab === 'settings' && <Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
-        {activeTab === 'account' && <Account darkMode={darkMode} setAvatar={setAvatar} />}
         {activeTab === 'performance' && <PerformanceReport darkMode={darkMode} />}
       </div>
     </div>
