@@ -108,7 +108,7 @@ const Login = ({ onLogin }) => {
         {/* Right side - Image */}
         <div className="w-1/2 relative">
           <img
-            src="/Login-bg.png"
+            src="/src/components/Login-bg.png"
             alt="Decorative"
             className="h-full w-full object-cover"
           />
